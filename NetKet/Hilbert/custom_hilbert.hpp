@@ -12,19 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <Eigen/Dense>
+#ifndef NETKET_CUSTOM_HILBERT_HPP
+#define NETKET_CUSTOM_HILBERT_HPP
+
 #include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <vector>
-#include "Graph/graph.hpp"
+
+#include <Eigen/Dense>
+#include "Graph/abstract_graph.hpp"
 #include "Utils/json_utils.hpp"
 #include "Utils/python_helper.hpp"
 #include "Utils/random_utils.hpp"
 #include "abstract_hilbert.hpp"
-
-#ifndef NETKET_CUSTOM_HILBERT_HPP
-#define NETKET_CUSTOM_HILBERT_HPP
 
 namespace netket {
 
@@ -33,7 +34,7 @@ namespace netket {
 */
 
 class CustomHilbert : public AbstractHilbert {
-  const Graph &graph_;
+  const AbstractGraph &graph_;
   std::vector<double> local_;
 
   int nstates_;
@@ -42,7 +43,7 @@ class CustomHilbert : public AbstractHilbert {
 
  public:
   template <class Ptype>
-  explicit CustomHilbert(const Graph &graph, const Ptype &pars)
+  explicit CustomHilbert(const AbstractGraph &graph, const Ptype &pars)
       : graph_(graph) {
     CheckFieldExists(pars, "QuantumNumbers", "Hilbert");
     // if (!pars["Hilbert"]["QuantumNumbers"].is_array()) {
@@ -54,7 +55,7 @@ class CustomHilbert : public AbstractHilbert {
 
     local_ = qn;
 
-    size_ = graph.Size();
+    size_ = graph.Nsites();
     nstates_ = local_.size();
   }
 
@@ -90,7 +91,7 @@ class CustomHilbert : public AbstractHilbert {
     }
   }
 
-  const Graph &GetGraph() const override { return graph_; }
+  const AbstractGraph &GetGraph() const override { return graph_; }
 };  // namespace netket
 
 }  // namespace netket

@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <Eigen/Dense>
 #include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <vector>
-#include "Graph/graph.hpp"
+
+#include <Eigen/Dense>
+#include "Graph/abstract_graph.hpp"
 #include "Utils/json_utils.hpp"
 #include "Utils/python_helper.hpp"
 #include "Utils/random_utils.hpp"
@@ -33,7 +34,7 @@ namespace netket {
 */
 
 class Qubit : public AbstractHilbert {
-  const Graph &graph_;
+  const AbstractGraph &graph_;
 
   std::vector<double> local_;
 
@@ -41,8 +42,8 @@ class Qubit : public AbstractHilbert {
 
  public:
   template <class Ptype>
-  explicit Qubit(const Graph &graph, const Ptype & /*pars*/) : graph_(graph) {
-    const int nqubits = graph.Size();
+  explicit Qubit(const AbstractGraph &graph, const Ptype & /*pars*/) : graph_(graph) {
+    const int nqubits = graph.Nsites();
     Init(nqubits);
   }
 
@@ -87,7 +88,7 @@ class Qubit : public AbstractHilbert {
     }
   }
 
-  const Graph &GetGraph() const override { return graph_; }
+  const AbstractGraph &GetGraph() const override { return graph_; }
 };
 
 }  // namespace netket

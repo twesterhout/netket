@@ -14,12 +14,13 @@
 #ifndef NETKET_ABSTRACTHILBERT_HPP
 #define NETKET_ABSTRACTHILBERT_HPP
 
-#include <Eigen/Dense>
 #include <complex>
 #include <vector>
-#include "Utils/random_utils.hpp"
 
+#include <Eigen/Dense>
 #include <nonstd/span.hpp>
+#include "Graph/abstract_graph.hpp"
+#include "Utils/random_utils.hpp"
 
 namespace netket {
 
@@ -79,7 +80,7 @@ class AbstractHilbert {
                           const std::vector<int> &tochange,
                           const std::vector<double> &newconf) const = 0;
 
-  virtual const Graph &GetGraph() const = 0;
+  virtual const AbstractGraph &GetGraph() const = 0;
 
   virtual ~AbstractHilbert() {}
 };

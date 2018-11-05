@@ -13,19 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <Eigen/Dense>
+#ifndef NETKET_SPIN_HPP
+#define NETKET_SPIN_HPP
+
 #include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <vector>
-#include "Graph/graph.hpp"
+
+#include <Eigen/Dense>
+#include "Graph/abstract_graph.hpp"
 #include "Utils/json_utils.hpp"
 #include "Utils/python_helper.hpp"
 #include "Utils/random_utils.hpp"
 #include "abstract_hilbert.hpp"
-
-#ifndef NETKET_SPIN_HPP
-#define NETKET_SPIN_HPP
 
 namespace netket {
 
@@ -37,7 +38,7 @@ namespace netket {
 */
 
 class Spin : public AbstractHilbert {
-  const Graph &graph_;
+  const AbstractGraph &graph_;
 
   double S_;
   double totalS_;
@@ -51,8 +52,8 @@ class Spin : public AbstractHilbert {
 
  public:
   template <class Ptype>
-  explicit Spin(const Graph &graph, const Ptype &pars) : graph_(graph) {
-    const int nspins = graph.Size();
+  explicit Spin(const AbstractGraph &graph, const Ptype &pars) : graph_(graph) {
+    const int nspins = graph.Nsites();
     const double S = FieldVal<double>(pars, "S", "Hilbert");
 
     Init(nspins, S);
@@ -164,7 +165,7 @@ class Spin : public AbstractHilbert {
     }
   }
 
-  const Graph &GetGraph() const override { return graph_; }
+  const AbstractGraph &GetGraph() const override { return graph_; }
 };
 
 }  // namespace netket

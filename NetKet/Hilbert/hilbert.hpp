@@ -39,7 +39,7 @@ class Hilbert : public AbstractHilbert {
   }
 
   template <class Ptype>
-  explicit Hilbert(const Graph &graph, const Ptype &pars) {
+  explicit Hilbert(const AbstractGraph &graph, const Ptype &pars) {
     InitWithGraph(graph, ParsConv(pars));
   }
 
@@ -56,13 +56,14 @@ class Hilbert : public AbstractHilbert {
     json gpars;
     gpars["Graph"]["Name"] = "Custom";
     gpars["Graph"]["Size"] = size;
-    Graph graph(gpars);
+    // TODO(twesterhout): Fix this memory leak!!
+    auto graph = make_graph(gpars);
 
-    InitWithGraph(graph, pars);
+    InitWithGraph(*graph, pars);
   }
 
   template <class Ptype>
-  void InitWithGraph(const Graph &graph, const Ptype &pars) {
+  void InitWithGraph(const AbstractGraph &graph, const Ptype &pars) {
     if (FieldExists(pars, "Name")) {
       std::string name = FieldVal<std::string>(pars, "Name");
       if (name == "Spin") {
@@ -102,7 +103,7 @@ class Hilbert : public AbstractHilbert {
     return h_->UpdateConf(v, tochange, newconf);
   }
 
-  const Graph &GetGraph() const override { return h_->GetGraph(); }
+  const AbstractGraph &GetGraph() const override { return h_->GetGraph(); }
 };
 }  // namespace netket
 
