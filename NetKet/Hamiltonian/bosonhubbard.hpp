@@ -19,9 +19,10 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
-#include "Graph/graph.hpp"
+#include "Graph/abstract_graph.hpp"
 #include "Hilbert/hilbert.hpp"
 #include "Utils/exceptions.hpp"
+#include "Utils/messages.hpp"
 #include "Utils/json_helper.hpp"
 #include "abstract_hamiltonian.hpp"
 
@@ -30,7 +31,7 @@ namespace netket {
 // Heisenberg model on an arbitrary graph
 class BoseHubbard : public AbstractHamiltonian {
   const Hilbert &hilbert_;
-  const Graph &graph_;
+  const AbstractGraph &graph_;
 
   int nsites_;
 

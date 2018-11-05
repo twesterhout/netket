@@ -24,6 +24,7 @@
 #include <limits>
 #include <map>
 #include <vector>
+#include "Utils/next_variation.hpp"
 
 namespace netket {
 

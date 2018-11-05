@@ -20,9 +20,10 @@
 #include <complex>
 #include <iostream>
 #include <vector>
-#include "Graph/graph.hpp"
+#include "Graph/abstract_graph.hpp"
 #include "Hilbert/hilbert.hpp"
 #include "Utils/random_utils.hpp"
+#include "Utils/messages.hpp"
 #include "abstract_hamiltonian.hpp"
 
 namespace netket {
@@ -37,7 +38,7 @@ class Ising : public AbstractHamiltonian {
   */
   const Hilbert &hilbert_;
 
-  const Graph &graph_;
+  const AbstractGraph &graph_;
 
   const int nspins_;
   double h_;

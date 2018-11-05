@@ -17,8 +17,8 @@
 
 #include <vector>
 
+#include "Graph/abstract_graph.hpp"
 #include "Utils/json_helper.hpp"
-
 #include "local_operator.hpp"
 
 namespace netket {
@@ -26,7 +26,7 @@ namespace netket {
 class CustomHamiltonian : public AbstractHamiltonian {
   std::vector<LocalOperator> operators_;
   const Hilbert &hilbert_;
-  const Graph &graph_;
+  const AbstractGraph &graph_;
 
  public:
   using MatType = LocalOperator::MatType;
