@@ -1,4 +1,5 @@
 // Copyright 2018 The Simons Foundation, Inc. - All Rights Reserved.
+// Copyright 2018 Tom Westerhout
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,75 +17,15 @@
 #define NETKET_JSONHELPER_HPP
 
 #include <fstream>
-#include <iostream>
-#include <json.hpp>
-#include <string>
-#include <vector>
+#include <sstream>
 
+#include <json.hpp>
 #include "exceptions.hpp"
+#include "kwargs.hpp"
 
 namespace netket {
 
 using json = nlohmann::json;
-
-bool FieldExists(const json& pars, const std::string& field) {
-  return pars.count(field) > 0;
-}
-
-/**
- * Checks whether @param field exists in @param pars and throws an
- * InvalidInputError if not.
- * @param context is used in the error message to help users locate the location
- * of the error.
- *
- * Example usage: CheckFieldExists(pars["Key"], "SubKey", "Key");
- * If SubKey does not exists, this will throw and error with message
- * "Field 'SubKey' (below 'Key') is not defined in the input".
- */
-
-void CheckFieldExists(const json& pars, const std::string& field,
-                      const std::string& context = "") {
-  if (!FieldExists(pars, field)) {
-    std::stringstream s;
-    s << "Field '" << field << "' ";
-    if (context.size() > 0) {
-      s << "(below '" << context << "') ";
-    }
-    s << "is not defined in the input";
-    throw InvalidInputError(s.str());
-  }
-}
-
-json FieldVal(const json& pars, const std::string& field,
-              const std::string& context = "") {
-  CheckFieldExists(pars, field, context);
-  return pars[field];
-}
-
-template <class Value>
-json FieldVal(const json& pars, const std::string& field,
-              const std::string& context = "") {
-  CheckFieldExists(pars, field, context);
-  return pars[field].get<Value>();
-}
-
-void FieldArray(const json& pars, const std::string& field,
-                std::vector<int>& arr, const std::string& context = "") {
-  CheckFieldExists(pars, field, context);
-  arr.resize(pars[field].size());
-  for (std::size_t i = 0; i < pars[field].size(); i++) {
-    arr[i] = pars[field][i];
-  }
-}
-
-template <class Value>
-Value FieldOrDefaultVal(const json& pars, std::string field, Value defval) {
-  if (FieldExists(pars, field)) {
-    return pars[field];
-  } else {
-    return defval;
-  }
-}
 
 json ReadJsonFromFile(std::string filename) {
   json pars;
@@ -100,5 +41,27 @@ json ReadJsonFromFile(std::string filename) {
   return pars;
 }
 
+namespace detail {
+template <>
+struct ParameterTraits<json> {
+  using Parameters = json;
+
+  static bool FieldExists(Parameters const& parameters,
+                          std::string const& field) {
+    return parameters.count(field) > 0;
+  }
+
+  template <class T>
+  static T GetField(Parameters const& parameters, std::string const& field) {
+    return parameters[field].get<T>();
+  }
+
+  static json GetPart(Parameters const& parameters, std::string const& field) {
+    return parameters[field];
+  }
+};
+}  // namespace detail
+
 }  // namespace netket
+
 #endif
