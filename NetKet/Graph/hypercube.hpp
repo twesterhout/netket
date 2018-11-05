@@ -16,8 +16,11 @@
 #define NETKET_HYPERCUBE_HPP
 
 #include <map>
+#include <memory>
 #include <vector>
 #include "Graph/abstract_graph.hpp"
+#include "Utils/kwargs.hpp"
+#include "Utils/memory_utils.hpp"
 
 namespace netket {
 
@@ -84,46 +87,21 @@ class Hypercube : public AbstractGraph {
   void Init(std::vector<std::vector<int>> const*);
   void GenerateLatticePoints();
   void GenerateAdjacencyList();
-
-#if 0
-  template <class Ptype>
-  Hypercube(const Ptype &pars)
-      : L_(FieldVal<int>(pars, "L", "Graph")),
-        ndim_(FieldVal<int>(pars, "Dimension", "Graph")),
-        pbc_(FieldOrDefaultVal(pars, "Pbc", true)) {
-    if (pbc_ && L_ <= 2) {
-      throw InvalidInputError(
-          "L<=2 hypercubes cannot have periodic boundary conditions");
-    }
-    Init(pars);
-  }
-
-  template <class Ptype>
-  void Init(const Ptype &pars) {
-    assert(L_ > 0);
-    assert(ndim_ >= 1);
-    GenerateLatticePoints();
-    GenerateAdjacencyList();
-
-    // If edge colors are specificied read them in, otherwise set them all to
-    // 0
-    if (FieldExists(pars, "EdgeColors")) {
-      std::vector<std::vector<int>> colorlist =
-          FieldVal<std::vector<std::vector<int>>>(pars, "EdgeColors", "Graph");
-      EdgeColorsFromList(colorlist, eclist_);
-    } else {
-      InfoMessage() << "No colors specified, edge colors set to 0 "
-                    << std::endl;
-      EdgeColorsFromAdj(adjlist_, eclist_);
-    }
-
-    InfoMessage() << "Hypercube created " << std::endl;
-    InfoMessage() << "Dimension = " << ndim_ << std::endl;
-    InfoMessage() << "L = " << L_ << std::endl;
-    InfoMessage() << "Pbc = " << pbc_ << std::endl;
-  }
-#endif
 };
+
+template <class Parameters>
+auto make_hypercube(const Parameters &parameters) -> std::unique_ptr<Hypercube>
+{
+  auto const L = FieldVal<int>(parameters, "L", "Graph");
+  auto const ndim = FieldVal<int>(parameters, "Dimension", "Graph");
+  auto const pbc = FieldOrDefaultVal(parameters, "Pbc", true);
+  if (FieldExists(parameters, "EdgeColors")) {
+    auto const colorlist =
+        FieldVal<std::vector<std::vector<int>>>(parameters, "EdgeColors", "Graph");
+    return make_unique<Hypercube>(L, ndim, pbc, colorlist);
+  }
+  return make_unique<Hypercube>(L, ndim, pbc);
+}
 
 }  // namespace netket
 #endif
