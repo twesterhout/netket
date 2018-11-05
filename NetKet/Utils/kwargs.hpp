@@ -15,6 +15,9 @@
 #ifndef NETKET_KWARGS_HPP
 #define NETKET_KWARGS_HPP
 
+#include <sstream>
+#include "exceptions.hpp"
+
 //
 // A more of less transparent handling of pybind11::kwargs and nlohmann::json
 // types as configuration parameters.
