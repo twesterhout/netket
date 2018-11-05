@@ -15,6 +15,9 @@
 #ifndef NETKET_GRAPH_FUNCTIONS_IMPL_HPP
 #define NETKET_GRAPH_FUNCTIONS_IMPL_HPP
 
+#include <cassert>
+#include <queue>
+
 namespace netket {
 
 template<typename Func>
@@ -76,7 +79,7 @@ void AbstractGraph::BreadthFirstSearch(int start, int max_depth, Func visitor_fu
   BreadthFirstSearch_Impl(start, max_depth, visitor_func, seen);
 }
 
-std::vector<int> AbstractGraph::Distances(int root) const {
+inline std::vector<int> AbstractGraph::Distances(int root) const {
   std::vector<int> dists(Nsites(), -1);
 
   // Dijkstra's algorithm
@@ -87,7 +90,7 @@ std::vector<int> AbstractGraph::Distances(int root) const {
   return dists;
 }
 
-std::vector<std::vector<int>> AbstractGraph::AllDistances() const {
+inline std::vector<std::vector<int>> AbstractGraph::AllDistances() const {
   // This can be implemented more efficiently (by reusing information between
   // calls to Distances) if necessary.
   std::vector<std::vector<int>> distances;

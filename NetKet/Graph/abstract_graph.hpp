@@ -16,9 +16,6 @@
 #define NETKET_ABSTRACTGRAPH_HPP
 
 #include <array>
-#include <cassert>
-#include <queue>
-#include <utility>
 #include <unordered_map>
 #include <vector>
 #include "Utils/array_hasher.hpp"
@@ -168,6 +165,10 @@ class AbstractGraph {
   void BreadthFirstSearch_Impl(int start, int max_depth, Func visitor_func,
                                std::vector<bool>& seen) const;
 };
+
+// TODO(twesterhout): Remove this! I've just got sick of replacing references to
+// Graph with references to AbstractGraph everywhere...
+using Graph = AbstractGraph;
 
 }  // namespace netket
 

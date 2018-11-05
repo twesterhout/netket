@@ -1,4 +1,5 @@
 // Copyright 2018 The Simons Foundation, Inc. - All Rights Reserved.
+// Copyright 2018 Tom Westerhout
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,13 +19,15 @@
 #include <map>
 #include <memory>
 #include <vector>
+
 #include "Graph/abstract_graph.hpp"
 #include "Utils/kwargs.hpp"
 #include "Utils/memory_utils.hpp"
+#include "config.hpp"
 
 namespace netket {
 
-class Hypercube : public AbstractGraph {
+class NETKET_EXPORT Hypercube : public AbstractGraph {
   // edge of the hypercube
   const int L_;
 
@@ -84,24 +87,26 @@ class Hypercube : public AbstractGraph {
   const ColorMap &EdgeColors() const override { return eclist_; }
 
  private:
-  void Init(std::vector<std::vector<int>> const*);
+  void Init(std::vector<std::vector<int>> const *);
   void GenerateLatticePoints();
   void GenerateAdjacencyList();
 };
 
+// TODO(twesterhout): Move me somewhere
 template <class Parameters>
-auto make_hypercube(const Parameters &parameters) -> std::unique_ptr<Hypercube>
-{
+auto make_hypercube(const Parameters &parameters)
+    -> std::unique_ptr<Hypercube> {
   auto const L = FieldVal<int>(parameters, "L", "Graph");
   auto const ndim = FieldVal<int>(parameters, "Dimension", "Graph");
   auto const pbc = FieldOrDefaultVal(parameters, "Pbc", true);
   if (FieldExists(parameters, "EdgeColors")) {
-    auto const colorlist =
-        FieldVal<std::vector<std::vector<int>>>(parameters, "EdgeColors", "Graph");
+    auto const colorlist = FieldVal<std::vector<std::vector<int>>>(
+        parameters, "EdgeColors", "Graph");
     return make_unique<Hypercube>(L, ndim, pbc, colorlist);
   }
   return make_unique<Hypercube>(L, ndim, pbc);
 }
 
 }  // namespace netket
+
 #endif

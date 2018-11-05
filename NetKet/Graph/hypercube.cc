@@ -19,6 +19,7 @@
 #include "Utils/exceptions.hpp"
 #include "Utils/messages.hpp"
 #include "Utils/next_variation.hpp"
+#include "config.hpp"
 
 namespace netket {
 
@@ -41,6 +42,7 @@ static void CheckArgs(int const L, int const ndim, bool const pbc) {
 }
 }  // namespace
 
+NETKET_EXPORT
 Hypercube::Hypercube(int const L, int const ndim, bool const pbc)
     : L_{L},
       ndim_{ndim},
@@ -54,6 +56,7 @@ Hypercube::Hypercube(int const L, int const ndim, bool const pbc)
   Init(nullptr);
 }
 
+NETKET_EXPORT
 Hypercube::Hypercube(int const L, int const ndim, bool const pbc,
                      std::vector<std::vector<int>> const &colorlist)
     : L_{L},
@@ -68,6 +71,7 @@ Hypercube::Hypercube(int const L, int const ndim, bool const pbc,
   Init(&colorlist);
 }
 
+NETKET_EXPORT
 void Hypercube::Init(std::vector<std::vector<int>> const *colorlist) {
   assert(L_ > 0 && "Bug! L_>=1 by construction.");
   assert(ndim_ >= 1 && "Bug! ndim_>=1 by construction.");
@@ -86,6 +90,7 @@ void Hypercube::Init(std::vector<std::vector<int>> const *colorlist) {
   InfoMessage() << "Pbc = " << pbc_ << '\n';
 }
 
+NETKET_EXPORT
 void Hypercube::GenerateLatticePoints() {
   std::vector<int> coord(ndim_, 0);
 
@@ -97,6 +102,7 @@ void Hypercube::GenerateLatticePoints() {
   } while (netket::next_variation(coord.begin(), coord.end(), L_ - 1));
 }
 
+NETKET_EXPORT
 void Hypercube::GenerateAdjacencyList() {
   adjlist_.resize(nsites_);
 
@@ -131,6 +137,7 @@ void Hypercube::GenerateAdjacencyList() {
 
 // Returns a list of permuted sites equivalent with respect to
 // translation symmetry
+NETKET_EXPORT
 std::vector<std::vector<int>> Hypercube::SymmetryTable() const {
   if (!pbc_) {
     throw InvalidInputError(
