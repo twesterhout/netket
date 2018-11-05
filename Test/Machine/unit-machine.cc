@@ -29,14 +29,14 @@ TEST_CASE("machines set/get correctly parameters", "[machine]") {
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = std::complex<double>;
 
-      netket::Machine<MType> machine(graph, hamiltonian, pars);
+      netket::Machine<MType> machine(*graph, hamiltonian, pars);
 
       int seed = 12342;
       double sigma = 1;
@@ -59,14 +59,14 @@ TEST_CASE("machines write/read to/from json correctly", "[machine]") {
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = std::complex<double>;
 
-      netket::Machine<MType> machine(graph, hamiltonian, pars);
+      netket::Machine<MType> machine(*graph, hamiltonian, pars);
 
       int seed = 12342;
       double sigma = 1;
@@ -100,14 +100,14 @@ TEST_CASE("machines compute log derivatives correctly", "[machine]") {
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = std::complex<double>;
 
-      netket::Machine<MType> machine(graph, hamiltonian, pars);
+      netket::Machine<MType> machine(*graph, hamiltonian, pars);
 
       double sigma = 1.;
       machine.InitRandomPars(1234, sigma);
@@ -159,15 +159,15 @@ TEST_CASE("machines compute logval differences correctly", "[machine]") {
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = std::complex<double>;
       using WfType = netket::Machine<MType>;
 
-      WfType machine(graph, hamiltonian, pars);
+      WfType machine(*graph, hamiltonian, pars);
 
       double sigma = 1;
       machine.InitRandomPars(1234, sigma);
@@ -241,15 +241,15 @@ TEST_CASE("machines update look-up tables correctly", "[machine]") {
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = std::complex<double>;
       using WfType = netket::Machine<MType>;
 
-      WfType machine(graph, hamiltonian, pars);
+      WfType machine(*graph, hamiltonian, pars);
 
       double sigma = 1;
       machine.InitRandomPars(1234, sigma);

@@ -30,8 +30,8 @@ TEST_CASE("layers set/get correctly parameters", "[layers]") {
       auto pars = input_tests[it];
 
       using MType = std::complex<double>;
-      netket::Graph graph(pars);
-      netket::Layer<MType> layer(graph, pars["Machine"]["Layers"][0]);
+      auto graph = netket::make_graph(pars);
+      netket::Layer<MType> layer(*graph, pars["Machine"]["Layers"][0]);
 
       int seed = 12342;
       double sigma = 1;
@@ -56,14 +56,14 @@ TEST_CASE("machines write/read to/from json correctly", "[layers]") {
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = std::complex<double>;
 
-      netket::Machine<MType> machine(graph, hamiltonian, pars);
+      netket::Machine<MType> machine(*graph, hamiltonian, pars);
 
       int seed = 12342;
       double sigma = 1;
@@ -97,14 +97,14 @@ TEST_CASE("layers compute log derivatives correctly", "[layer]") {
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = std::complex<double>;
 
-      netket::Machine<MType> machine(graph, hamiltonian, pars);
+      netket::Machine<MType> machine(*graph, hamiltonian, pars);
 
       double sigma = 1.;
       machine.InitRandomPars(1234, sigma);
@@ -155,15 +155,15 @@ TEST_CASE("Layers update look-up tables correctly", "[layer]") {
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = std::complex<double>;
       using WfType = netket::Machine<MType>;
 
-      WfType machine(graph, hamiltonian, pars);
+      WfType machine(*graph, hamiltonian, pars);
 
       double sigma = 1;
       machine.InitRandomPars(1234, sigma);

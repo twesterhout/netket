@@ -29,8 +29,8 @@ TEST_CASE("Full / Lanczos ED give same ground state energy", "[ground state]") {
     SECTION("Exact Diagonalization test (" + std::to_string(i) + ") on " +
             name) {
       netket::json pars = input_tests[i];
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 

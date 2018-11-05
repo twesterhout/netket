@@ -25,8 +25,8 @@
 
 netket::Hilbert MakeHilbert(const netket::json& pars) {
   if (netket::FieldExists(pars, "Graph")) {
-    netket::Graph graph(pars);
-    return netket::Hilbert(graph, pars);
+    auto graph = netket::make_graph(pars);
+    return netket::Hilbert(*graph, pars);
   } else {
     return netket::Hilbert(pars);
   }

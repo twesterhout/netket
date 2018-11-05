@@ -31,8 +31,8 @@ TEST_CASE("hamiltonians produce elements in the hilbert space",
             input_tests[it]["Hamiltonian"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
@@ -75,8 +75,8 @@ TEST_CASE("hamiltonians do not have duplicate connections or newconfs",
             input_tests[it]["Hamiltonian"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
@@ -117,8 +117,8 @@ TEST_CASE("hamiltonians are hermitean", "[hamiltonian]") {
             input_tests[it]["Hamiltonian"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 

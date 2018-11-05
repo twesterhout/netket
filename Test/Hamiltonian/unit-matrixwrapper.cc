@@ -86,8 +86,8 @@ TEST_CASE("SparseMatrixWrapper for Hamiltonian is Hermitian",
     SECTION("Hamiltonian test (" + std::to_string(it) + ") on " +
             input_tests[it]["Hamiltonian"].dump()) {
       auto pars = input_tests[it];
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
@@ -108,8 +108,8 @@ TEST_CASE("DenseMatrixWrapper for Hamiltonian is Hermitian",
     SECTION("Hamiltonian test (" + std::to_string(it) + ") on " +
             input_tests[it]["Hamiltonian"].dump()) {
       auto pars = input_tests[it];
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
@@ -130,8 +130,8 @@ TEST_CASE("DirectMatrixWrapper gives same results as SparseMatrixWrapper",
     SECTION("Hamiltonian test (" + std::to_string(it) + ") on " +
             input_tests[it]["Hamiltonian"].dump()) {
       auto pars = input_tests[it];
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      auto graph = netket::make_graph(pars);
+      netket::Hilbert hilbert(*graph, pars);
 
       netket::Hamiltonian hamiltonian(hilbert, pars);
 
