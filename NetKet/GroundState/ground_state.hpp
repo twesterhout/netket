@@ -49,8 +49,8 @@ class GroundState {
       throw InvalidInputError(s.str());
     }
 
-    Graph graph(pars);
-    Hilbert hilbert(graph, pars);
+    auto graph = make_graph(pars);
+    Hilbert hilbert(*graph, pars);
     Hamiltonian hamiltonian(hilbert, pars);
 
     if (method_name == "Gd" || method_name == "Sr") {

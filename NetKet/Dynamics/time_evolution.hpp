@@ -22,8 +22,8 @@ class TimeEvolutionDriver {
   using StepperType = ode::AbstractTimeStepper<VectorType>;
 
   static TimeEvolutionDriver FromJson(const json& pars) {
-    Graph graph(pars);
-    Hilbert hilbert(graph, pars);
+    auto graph = make_graph(pars);
+    Hilbert hilbert(*graph, pars);
     Hamiltonian hamiltonian(hilbert, pars);
 
     auto pars_te = pars["TimeEvolution"];
