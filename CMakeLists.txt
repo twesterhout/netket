@@ -176,7 +176,7 @@ target_link_libraries(netket_lib
         IETL
         pybind11
 )
-add_dependencies(netket eigen_project pybind11)
+add_dependencies(netket_lib eigen_project pybind11)
 
 # Check if we should use native Lapack with Eigen
 option(USE_LAPACK "Enable Lapack Support." OFF)
