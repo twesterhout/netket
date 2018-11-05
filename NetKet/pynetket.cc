@@ -42,17 +42,29 @@ PYBIND11_MODULE(pynetket, m) {
   py::bind_vector<std::vector<std::vector<double>>>(m, "VectorVectorDouble");
   py::bind_vector<std::vector<std::complex<double>>>(m, "VectorComplexDouble");
 
-  py::class_<Graph>(m, "Graph")
-      .def(py::init<std::string, py::kwargs>())
-      .def("Nsites", &Graph::Nsites)
-      .def("AdjacencyList", &Graph::AdjacencyList)
-      .def("SymmetryTable", &Graph::SymmetryTable)
-      .def("EdgeColors", &Graph::EdgeColors)
-      .def("IsBipartite", &Graph::IsBipartite)
-      .def("IsConnected", &Graph::IsConnected)
-      .def("Distances", &Graph::Distances)
-      .def("AllDistances", &Graph::AllDistances);
+  py::class_<AbstractGraph>(m, "_AbstractGraph")
+      .def("Nsites", &AbstractGraph::Nsites)
+      .def("AdjacencyList", &AbstractGraph::AdjacencyList)
+      .def("SymmetryTable", &AbstractGraph::SymmetryTable)
+      .def("EdgeColors", &AbstractGraph::EdgeColors)
+      .def("IsBipartite", &AbstractGraph::IsBipartite)
+      .def("IsConnected", &AbstractGraph::IsConnected)
+      .def("Distances", &AbstractGraph::Distances)
+      .def("AllDistances", &AbstractGraph::AllDistances);
 
+  py::class_<Hypercube, AbstractGraph>(m, "Hypercube")
+      .def(py::init<int, int, bool>())
+      .def(py::init<int, int, bool, std::vector<std::vector<int>>>())
+      .def("Nsites", &Hypercube::Nsites)
+      .def("AdjacencyList", &Hypercube::AdjacencyList)
+      .def("SymmetryTable", &Hypercube::SymmetryTable)
+      .def("EdgeColors", &Hypercube::EdgeColors)
+      .def("IsBipartite", &Hypercube::IsBipartite)
+      .def("IsConnected", &Hypercube::IsConnected)
+      .def("Distances", &Hypercube::Distances)
+      .def("AllDistances", &Hypercube::AllDistances);
+
+#if 0 // Only temporary
   py::class_<Hilbert>(m, "Hilbert")
       .def(py::init<py::kwargs>())
       .def(py::init<const Graph &, py::kwargs>())
@@ -71,6 +83,7 @@ PYBIND11_MODULE(pynetket, m) {
   py::class_<SparseMatrixWrapper<Hamiltonian>>(m, "SparseHamiltonianWrapper")
       .def(py::init<const Hamiltonian &>())
       .def("GetMatrix", &SparseMatrixWrapper<Hamiltonian>::GetMatrix);
+#endif
 }
 
 }  // namespace netket
