@@ -159,11 +159,15 @@ endif()
 # NetKet
 #
 
-add_library(netket_lib INTERFACE)
-target_include_directories(netket_lib INTERFACE NetKet)
-target_include_directories(netket_lib SYSTEM INTERFACE ${MPI_CXX_INCLUDE_PATH})
+add_library(netket_lib SHARED
+    NetKet/Graph/hypercube.cc
+    NetKet/Graph/custom_graph.cc
+    NetKet/Utils/messages.cc
+)
+target_include_directories(netket_lib PUBLIC NetKet)
+target_include_directories(netket_lib SYSTEM PUBLIC ${MPI_CXX_INCLUDE_PATH})
 target_link_libraries(netket_lib
-    INTERFACE
+    PUBLIC
         ${MPI_CXX_LIBRARIES}
         Eigen3
         nlohmann_json
@@ -172,6 +176,7 @@ target_link_libraries(netket_lib
         IETL
         pybind11
 )
+add_dependencies(netket eigen_project pybind11)
 
 # Check if we should use native Lapack with Eigen
 option(USE_LAPACK "Enable Lapack Support." OFF)
@@ -187,22 +192,20 @@ if(USE_LAPACK)
 
 endif()
 
-
-
 add_executable(netket NetKet/netket.cc)
 target_link_libraries(netket PUBLIC netket_lib)
 # Yes, this is ugly, but until CMake 3.5, we can't add an external project
 # dependency to an interface library
-add_dependencies(netket eigen_project)
+# add_dependencies(netket eigen_project)
 
 
 
 add_library(pynetket MODULE NetKet/pynetket.cc)
-target_link_libraries(pynetket  PRIVATE pybind11)
+target_link_libraries(pynetket PRIVATE pybind11)
 target_link_libraries(pynetket PUBLIC netket_lib)
-set_target_properties(pynetket  PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}"
-                                         SUFFIX "${PYTHON_MODULE_EXTENSION}")
-add_dependencies(pynetket eigen_project)
+set_target_properties(pynetket PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}"
+                                          SUFFIX "${PYTHON_MODULE_EXTENSION}")
+# add_dependencies(pynetket eigen_project)
 
 #
 # Testing
