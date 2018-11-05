@@ -15,90 +15,23 @@
 #ifndef NETKET_MESSAGES_HPP
 #define NETKET_MESSAGES_HPP
 
-#include <mpi.h>
-#include <ostream>
-#include <streambuf>
+#include "config.hpp"
+#include <iosfwd>
 #include <string>
 
 namespace netket {
 
-class NullBuffer : public std::streambuf {
- public:
-  int overflow(int c) { return c; }
-};
+NETKET_EXPORT
+std::ostream& InfoMessage(const std::string& comment = "# ");
 
-class NullStream : public std::ostream {
- public:
-  NullStream() : std::ostream(&m_sb) {}
+NETKET_EXPORT
+std::ostream& WarningMessage(const std::string& comment = "# WARNING: ");
 
- private:
-  NullBuffer m_sb;
-};
+NETKET_EXPORT
+std::ostream& ErrorMessage(const std::string& comment = "# ERROR: ");
 
-std::ostream& InfoMessage(const std::string& comment = "# ") {
-  // null stream
-  static NullStream nullstream;
-
-  // get MPI rank
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-  if (rank == 0) {
-    return std::cout << comment;
-  } else {
-    return nullstream;
-  }
-}
-
-
-std::ostream& WarningMessage(const std::string& comment = "# WARNING: ") {
-  // null stream
-  static NullStream nullstream;
-
-  // get MPI rank
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-  if (rank == 0) {
-    return std::cerr << comment;
-  } else {
-    return nullstream;
-  }
-}
-
-std::ostream& ErrorMessage(const std::string& comment = "# ERROR: ") {
-  // null stream
-  static NullStream nullstream;
-
-  // get MPI rank
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-  if (rank == 0) {
-    return std::cerr << comment;
-  } else {
-    return nullstream;
-  }
-}
-
-std::ostream& DebugMessage(const std::string& comment = "# DEBUG: ") {
-  // null stream
-  static NullStream nullstream;
-
-#ifdef NDEBUG
-  (void)comment;
-  return nullstream;
-#else
-  // get MPI rank
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == 0) {
-    return std::cout << comment;
-  } else {
-    return nullstream;
-  }
-#endif
-}
+NETKET_EXPORT
+std::ostream& DebugMessage(const std::string& comment = "# DEBUG: ");
 
 }  // namespace netket
 
