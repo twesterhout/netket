@@ -15,12 +15,11 @@
 #ifndef NETKET_JSON_DUMPS_HPP
 #define NETKET_JSON_DUMPS_HPP
 
-#include <Eigen/Dense>
 #include <complex>
-#include <iostream>
-#include <json.hpp>
 #include <vector>
 
+#include <Eigen/Dense>
+#include <json.hpp>
 #include "exceptions.hpp"
 
 namespace Eigen {
@@ -62,14 +61,16 @@ void from_json(const nlohmann::json &js,
   std::vector<std::vector<T>> temp = js.get<std::vector<std::vector<T>>>();
 
   if (temp[0].size() == 0) {
-    throw netket::InvalidInputError("Error while loading Eigen Matrix from Json");
+    throw netket::InvalidInputError(
+        "Error while loading Eigen Matrix from Json");
   }
 
   v.resize(temp.size(), temp[0].size());
   for (std::size_t i = 0; i < temp.size(); i++) {
     for (std::size_t j = 0; j < temp[i].size(); j++) {
       if (temp[i].size() != temp[0].size()) {
-        throw netket::InvalidInputError("Error while loading Eigen Matrix from Json");
+        throw netket::InvalidInputError(
+            "Error while loading Eigen Matrix from Json");
       }
       v(i, j) = temp[i][j];
     }
@@ -78,20 +79,21 @@ void from_json(const nlohmann::json &js,
 
 }  // namespace Eigen
 
-namespace std {
-
-void to_json(nlohmann::json &js, const std::complex<double> &p) {
-  js = nlohmann::json{p.real(), p.imag()};
-}
-
-void from_json(const nlohmann::json &js, std::complex<double> &p) {
-  if (js.is_array()) {
-    p = std::complex<double>(js[0].get<double>(), js[1].get<double>());
-  } else {
-    p = std::complex<double>(js.get<double>(), 0.);
+namespace nlohmann {
+template <typename T>
+struct adl_serializer<std::complex<T>> {
+  static void to_json(json &js, const std::complex<T> &p) {
+    js = json{p.real(), p.imag()};
   }
-}
 
-}  // namespace std
+  static void from_json(const json &js, std::complex<T> &p) {
+    if (js.is_array()) {
+      p = std::complex<T>{js.at(0).get<T>(), js.at(1).get<T>()};
+    } else {
+      p = std::complex<T>{js.get<T>(), T{0}};
+    }
+  }
+};
+}  // namespace nlohmann
 
 #endif
