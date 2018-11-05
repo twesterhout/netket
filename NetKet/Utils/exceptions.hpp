@@ -1,4 +1,6 @@
 // Copyright 2018 The Simons Foundation, Inc. - All Rights Reserved.
+// Copyright 2018 Tom Westerhout
+//
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,36 +17,20 @@
 #ifndef NETKET_EXCEPTIONS_HPP
 #define NETKET_EXCEPTIONS_HPP
 
-#include <exception>
-#include <string>
+#include <stdexcept>
 
 namespace netket {
 
-class NetketBaseException : public std::exception
-{
-    std::string message_;
-
-public:
-    explicit NetketBaseException(const std::string& message)
-        : message_(message)
-    {
-    }
-
-    const char* what() const noexcept override
-    {
-        return message_.c_str();
-    }
+class NetketBaseException : public std::runtime_error {
+ public:
+  using std::runtime_error::runtime_error;
 };
 
-class InvalidInputError : public NetketBaseException
-{
-public:
-    explicit InvalidInputError(const std::string& message)
-        : NetketBaseException(message)
-    {
-    }
+class InvalidInputError : public NetketBaseException {
+ public:
+  using NetketBaseException::NetketBaseException;
 };
 
-}
+}  // namespace netket
 
-#endif // NETKET_EXCEPTIONS_HPP
+#endif  // NETKET_EXCEPTIONS_HPP
