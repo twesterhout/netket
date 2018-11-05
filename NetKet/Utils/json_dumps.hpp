@@ -30,7 +30,7 @@ void to_json(nlohmann::json &js, const Matrix<T, Eigen::Dynamic, 1> &v) {
   for (std::size_t i = 0; i < std::size_t(v.size()); i++) {
     temp[i] = v(i);
   }
-  js = nlohmann::json(temp);
+  js = nlohmann::json(std::move(temp));
 }
 
 template <class T>
@@ -52,7 +52,7 @@ void to_json(nlohmann::json &js,
       temp[i][j] = v(i, j);
     }
   }
-  js = nlohmann::json(temp);
+  js = nlohmann::json(std::move(temp));
 }
 
 template <class T>
