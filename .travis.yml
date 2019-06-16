@@ -172,9 +172,10 @@ install:
   - python -m pip install pytest-xdist
   - python -m pytest --version
   - NETKET_CMAKE_FLAGS="$CMAKE_FLAGS" python -m pip install -v .
-  - mkdir workdir && cd workdir
 
 script:
+  - ./Test/check_license.sh
+  - mkdir workdir && cd workdir
   - python -c 'from mpi4py import MPI; print(MPI.get_vendor())'
   - python -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)'
   - python -m pytest -n 2 --verbose ../Test/
