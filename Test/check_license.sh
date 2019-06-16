@@ -13,6 +13,19 @@
 # limitations under the License.
 #!/bin/bash
 
+_USE_COLORS=true
+if diff --color=always 2>&1 | grep -q "unrecognized option" ; then
+	_USE_COLORS=false
+fi
+
+_diff() {
+	if $_USE_COLORS ; then
+		diff --color=always $@
+	else
+		diff $@
+	fi
+}
+
 _get_year_specs() {
 	declare -A exceptions
 	# We do our best to guess the years correctly, but sometimes, git log
@@ -70,7 +83,7 @@ _expected_cxx_header() {
 _check_copyright() {
 	filename=$1
 	expected=$(_expected_cxx_header "$filename")
-	output=$(diff --color=always <(head -n $(echo "$expected" | wc -l) "$filename") <(echo "$expected"))
+	output=$(_diff <(head -n $(echo "$expected" | wc -l) "$filename") <(echo "$expected"))
 	if [ -n "$output" ] ; then
 		echo -e "\e[1;37m$filename:\e[0m"
 		echo -e "$output" | sed 's/^/    /'
